@@ -1,4 +1,4 @@
 # Installation
 
-1. `npm run install`
+1. `npm install`
 2. `npm run serve`
