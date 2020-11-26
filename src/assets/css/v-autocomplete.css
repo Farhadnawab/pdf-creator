@@ -1,0 +1,4 @@
+.v-autocomplete{position:relative}
+.v-autocomplete .v-autocomplete-list{position:absolute; max-width: 40rem;  border-radius: 4px; border:1px solid #e2e8f0; max-height:20rem; overflow-y: auto;}
+.v-autocomplete .v-autocomplete-list .v-autocomplete-list-item{cursor:pointer}.v-autocomplete .v-autocomplete-list .v-autocomplete-list-item.v-autocomplete-item-active{background-color:#f3f6fa}
+.v-autocomplete-input {border:1px solid #e2e8f0; border-radius:0.25rem;width: 24rem;padding: 0.8rem;} 

@@ -15,7 +15,7 @@ export default new Router({
     },
     {
       path: '/edit/:id',
-      component: editPDFVue,
+      component: editPDFVue
     },
     {
         path:'/',

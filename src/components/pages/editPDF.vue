@@ -1,4 +1,10 @@
 <template>
+<div class="h-full">
+  <div class="mb-6 text-right">
+      <router-link to="/add" class="bg-blue-500 px-4 py-2 rounded inline-block text-white hover:bg-blue-600 font-semibold">
+        <i class="fa fa-plus-circle"></i>  Add PDF
+      </router-link>
+  </div>
   <div class="flex h-full">
     <div class="editor bg-gray-200 w-1/2 border border-gray-400 rounded p-2">
       <editor-menu-bar :editor="editor" v-slot="{ commands, isActive }">
@@ -9,7 +15,7 @@
             :class="{ 'is-active': isActive.bold() }"
             @click="commands.bold"
           >
-            Bold
+            <i class="fa fa-bold"></i>
           </button>
 
           <button
@@ -17,7 +23,7 @@
             :class="{ 'is-active': isActive.italic() }"
             @click="commands.italic"
           >
-            Italic
+            <i class="fa fa-italic"></i>
           </button>
 
           <button
@@ -25,7 +31,7 @@
             :class="{ 'is-active': isActive.strike() }"
             @click="commands.strike"
           >
-            Strike
+            <i class="fa fa-strikethrough"></i>
           </button>
 
           <button
@@ -33,7 +39,7 @@
             :class="{ 'is-active': isActive.underline() }"
             @click="commands.underline"
           >
-            Underline
+            <i class="fa fa-underline"></i>
           </button>
 
           <button
@@ -41,7 +47,7 @@
             :class="{ 'is-active': isActive.code() }"
             @click="commands.code"
           >
-            Code
+            <i class="fa fa-code"></i>
           </button>
 
           <button
@@ -49,7 +55,7 @@
             :class="{ 'is-active': isActive.paragraph() }"
             @click="commands.paragraph"
           >
-            P
+            <i class="fa fa-paragraph"></i>
           </button>
 
           <button
@@ -81,7 +87,7 @@
             :class="{ 'is-active': isActive.bullet_list() }"
             @click="commands.bullet_list"
           >
-            Ul
+            <i class="fa fa-list"></i>
           </button>
 
           <button
@@ -89,7 +95,7 @@
             :class="{ 'is-active': isActive.ordered_list() }"
             @click="commands.ordered_list"
           >
-            OL
+            <i class="fa fa-list-ol"></i>
           </button>
 
           <button
@@ -97,7 +103,7 @@
             :class="{ 'is-active': isActive.blockquote() }"
             @click="commands.blockquote"
           >
-            Quote
+            <i class="fa fa-quote-right"></i>
           </button>
 
           <button
@@ -119,14 +125,14 @@
             class="menubar__button"
             @click="commands.undo"
           >
-            Undo
+            <i class="fa fa-undo"></i>
           </button>
 
           <button
             class="menubar__button"
             @click="commands.redo"
           >
-            Redo
+            <i class="fa fa-redo"></i>
           </button>
 
         </div>
@@ -139,6 +145,7 @@
       <span class="font-bold text-2xl text-gray-400">PREVIEW</span>
     </div>
   </div>
+</div>
 </template>
 
 <script>
@@ -166,15 +173,13 @@ import {
 
 export default {
   name: 'editPDF',
-  props: {
-    msg: String
-  },
   components: {
     EditorContent,
     EditorMenuBar
   },
   data() {
     return {
+      id : 0,
       editor: new Editor({
         extensions: [
           new Blockquote(),
@@ -195,40 +200,52 @@ export default {
           new Underline(),
           new History(),
         ],
-        content: `
-          <h2>
-            Hi there,
-          </h2>
-          <p>
-            this is a very <em>basic</em> example of tiptap.
-          </p>
-          <pre><code>body { display: none; }</code></pre>
-          <ul>
-            <li>
-              A regular list
-            </li>
-            <li>
-              With regular items
-            </li>
-          </ul>
-          <blockquote>
-            It's amazing 👏
-            <br />
-            – mom
-          </blockquote>
-        `,
+        content: '',
       }),
     }
   },
   beforeDestroy() {
     this.editor.destroy()
   },
+  created(){
+    this.setContentEditor();
+  },
+  watch:{
+    $route (to, from){
+      this.setContentEditor();
+    }
+  },
+  methods: {
+    getRecord(id){
+      let pdfList = localStorage.getItem("pdfList");
+
+      if (typeof pdfList !== 'undefined' && pdfList !== null){
+        pdfList = JSON.parse(pdfList);
+        
+        let result = pdfList.filter(item => item.id == id);
+        return result[0].body;
+      }
+    },
+
+    setContentEditor(){
+      this.id = this.$route.params.id;
+      this.editor.setContent(this.getRecord(this.id));
+    }
+  }
 }
 </script>
 
 <style scoped>
   .menubar__button {
     @apply border rounded p-1 m-1 text-sm uppercase font-semibold bg-white;
+  }
 
+  .editor__content {
+    height:100%;
+  }
+
+  .editor__content .ProseMirror {
+    height:100%;
+    outline:0;
   }
 </style>
